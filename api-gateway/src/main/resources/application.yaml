@@ -28,6 +28,19 @@ spring:
                 args:
                   name: academyServiceCB
                   fallbackUri: forward:/fallback/academyServiceFallback
+      httpclient:
+        connect-timeout: 20000
+        response-timeout: 120s
+
+          - id: records-service
+            uri: http://localhost:8083
+            predicates:
+              - Path=/api/v1/asistencias/**, /api/v1/anotaciones/**
+            filters:
+              - name: CircuitBreaker
+                args:
+                  name: recordsServiceCB
+                  fallbackUri: forward:/fallback/recordsServiceFallback
 
           - id: records-service
             uri: http://localhost:8083
@@ -41,16 +54,38 @@ spring:
 
 resilience4j:
   circuitbreaker:
+    config:
+      default:
+        timeout: 30s
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+        slowCallRateThreshold: 100
+        slowCallDurationThreshold: 2s
+      instances:
+        userServiceCB:
+          slidingWindowSize: 10
+          minimumNumberOfCalls: 5
+          failureRateThreshold: 50
+          waitDurationInOpenState: 10s
+        academyServiceCB:
+          slidingWindowSize: 10
+          minimumNumberOfCalls: 5
+          failureRateThreshold: 50
+          waitDurationInOpenState: 10s
+  timelimiter:
     instances:
       userServiceCB:
-        sliding-window-size: 10
-        failure-rate-threshold: 50
-        wait-duration-in-open-state: 10000
+        timeoutDuration: 30s
+        cancelRunningFuture: true
       academyServiceCB:
-        sliding-window-size: 10
-        failure-rate-threshold: 50
-        wait-duration-in-open-state: 10000
-      recordsServiceCB:
-        sliding-window-size: 10
-        failure-rate-threshold: 50
-        wait-duration-in-open-state: 10000
+        timeoutDuration: 30s
+        cancelRunningFuture: true
+
+logging:
+  level:
+    resilience4j: DEBUG
+    io.github.resilience4j: DEBUG
