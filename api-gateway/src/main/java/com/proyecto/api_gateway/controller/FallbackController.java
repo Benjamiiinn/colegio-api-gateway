@@ -47,4 +47,21 @@ public class FallbackController {
         response.put("status", "503");
         return Mono.just(ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response));
     }
+
+    @GetMapping("/recordServiceFallback")
+    public Mono<ResponseEntity<Map<String, String>>> recordServiceFallback() {
+        Map<String, String> response = new HashMap<>();
+        response.put("mensaje", "El servicio académico no responde. Por favor, intente más tarde.");
+        response.put("status", "503");
+        return Mono.just(ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response));
+    }
+
+    @PostMapping("/recordServiceFallback")
+    public Mono<ResponseEntity<Map<String, String>>> recordServiceFallbackPost() {
+        Map<String, String> response = new HashMap<>();
+        response.put("mensaje", "El servicio de asistencias no responde. Por favor, intente más tarde.");
+        response.put("status", "503");
+        return Mono.just(ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response));
+    }
+
 }

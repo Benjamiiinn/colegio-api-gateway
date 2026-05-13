@@ -28,29 +28,19 @@ spring:
                 args:
                   name: academyServiceCB
                   fallbackUri: forward:/fallback/academyServiceFallback
+
+          - id: records-service
+            uri: http://localhost:8083
+            predicates:
+              - Path=/api/v1/asistencias/**, /api/v1/anotaciones/**
+            filters:
+              - name: CircuitBreaker
+                args:
+                  name: recordsServiceCB
+                  fallbackUri: forward:/fallback/recordsServiceFallback
       httpclient:
         connect-timeout: 20000
         response-timeout: 120s
-
-          - id: records-service
-            uri: http://localhost:8083
-            predicates:
-              - Path=/api/v1/asistencias/**, /api/v1/anotaciones/**
-            filters:
-              - name: CircuitBreaker
-                args:
-                  name: recordsServiceCB
-                  fallbackUri: forward:/fallback/recordsServiceFallback
-
-          - id: records-service
-            uri: http://localhost:8083
-            predicates:
-              - Path=/api/v1/asistencias/**, /api/v1/anotaciones/**
-            filters:
-              - name: CircuitBreaker
-                args:
-                  name: recordsServiceCB
-                  fallbackUri: forward:/fallback/recordsServiceFallback
 
 resilience4j:
   circuitbreaker:
@@ -76,12 +66,20 @@ resilience4j:
           minimumNumberOfCalls: 5
           failureRateThreshold: 50
           waitDurationInOpenState: 10s
+        recordServiceCB:
+          slidingWindowSize: 10
+          minimumNumberOfCalls: 5
+          failureRateThreshold: 50
+          waitDurationInOpenState: 10s
   timelimiter:
     instances:
       userServiceCB:
         timeoutDuration: 30s
         cancelRunningFuture: true
       academyServiceCB:
+        timeoutDuration: 30s
+        cancelRunningFuture: true
+      recordServiceCB:
         timeoutDuration: 30s
         cancelRunningFuture: true
 
