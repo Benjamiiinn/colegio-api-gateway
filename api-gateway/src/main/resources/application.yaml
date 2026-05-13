@@ -29,6 +29,16 @@ spring:
                   name: academyServiceCB
                   fallbackUri: forward:/fallback/academyServiceFallback
 
+          - id: records-service
+            uri: http://localhost:8083
+            predicates:
+              - Path=/api/v1/asistencias/**, /api/v1/anotaciones/**
+            filters:
+              - name: CircuitBreaker
+                args:
+                  name: recordsServiceCB
+                  fallbackUri: forward:/fallback/recordsServiceFallback
+
 resilience4j:
   circuitbreaker:
     instances:
@@ -37,6 +47,10 @@ resilience4j:
         failure-rate-threshold: 50
         wait-duration-in-open-state: 10000
       academyServiceCB:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10000
+      recordsServiceCB:
         sliding-window-size: 10
         failure-rate-threshold: 50
         wait-duration-in-open-state: 10000
