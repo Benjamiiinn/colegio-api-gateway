@@ -32,6 +32,26 @@ spring:
         connect-timeout: 20000
         response-timeout: 120s
 
+          - id: records-service
+            uri: http://localhost:8083
+            predicates:
+              - Path=/api/v1/asistencias/**, /api/v1/anotaciones/**
+            filters:
+              - name: CircuitBreaker
+                args:
+                  name: recordsServiceCB
+                  fallbackUri: forward:/fallback/recordsServiceFallback
+
+          - id: records-service
+            uri: http://localhost:8083
+            predicates:
+              - Path=/api/v1/asistencias/**, /api/v1/anotaciones/**
+            filters:
+              - name: CircuitBreaker
+                args:
+                  name: recordsServiceCB
+                  fallbackUri: forward:/fallback/recordsServiceFallback
+
 resilience4j:
   circuitbreaker:
     config:
