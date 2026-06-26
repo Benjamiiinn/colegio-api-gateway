@@ -66,6 +66,11 @@ spring:
         connect-timeout: 20000
         response-timeout: 120s
 
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+
 resilience4j:
   circuitbreaker:
     config:
