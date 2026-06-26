@@ -13,7 +13,9 @@ FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
 COPY --from=build /app/target/*.jar app.jar
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 EXPOSE 9090
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["/entrypoint.sh"]
