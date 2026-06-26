@@ -23,15 +23,25 @@ spring:
             allowedHeaders: "*"
             allowCredentials: true
       routes:
-      - id: user-service
+      - id: user-service-auth
         uri: lb://USER-SERVICE
         predicates:
-          - Path=/api/v1/usuarios/**,/api/v1/auth/**
+          - Path=/api/v1/auth/**
         filters:
           - name: CircuitBreaker
             args:
               name: userServiceCB
-              fallbackUri: forward:/fallback/userServiceFallback
+              # fallbackUri: forward:/fallback/userServiceFallback
+
+      - id: user-service-usuarios
+        uri: lb://USER-SERVICE
+        predicates:
+          - Path=/api/v1/usuarios/**
+        filters:
+          - name: CircuitBreaker
+            args:
+              name: userServiceCB
+              # fallbackUri: forward:/fallback/userServiceFallback
 
       - id: academy-service
         uri: lb://ACADEMY-SERVICE
@@ -41,7 +51,7 @@ spring:
           - name: CircuitBreaker
             args:
               name: academyServiceCB
-              fallbackUri: forward:/fallback/academyServiceFallback
+              # fallbackUri: forward:/fallback/academyServiceFallback
 
       - id: records-service
         uri: lb://RECORDS-SERVICE
@@ -51,7 +61,7 @@ spring:
           - name: CircuitBreaker
             args:
               name: recordsServiceCB
-              fallbackUri: forward:/fallback/recordsServiceFallback
+              # fallbackUri: forward:/fallback/recordsServiceFallback
       httpclient:
         connect-timeout: 20000
         response-timeout: 120s
