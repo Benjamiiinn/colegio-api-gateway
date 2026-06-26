@@ -26,7 +26,7 @@ spring:
       - id: user-service
         uri: lb://USER-SERVICE
         predicates:
-          - Path=/api/v1/usuarios/**, /api/v1/auth/**
+          - Path=/api/v1/usuarios/**,/api/v1/auth/**
         filters:
           - name: CircuitBreaker
             args:
@@ -36,7 +36,7 @@ spring:
       - id: academy-service
         uri: lb://ACADEMY-SERVICE
         predicates:
-          - Path=/api/v1/cursos/**, /api/v1/asignaturas/**, /api/v1/matriculas/**, /api/v1/calificaciones/**
+          - Path=/api/v1/cursos/**,/api/v1/asignaturas/**,/api/v1/matriculas/**,/api/v1/calificaciones/**
         filters:
           - name: CircuitBreaker
             args:
@@ -46,7 +46,7 @@ spring:
       - id: records-service
         uri: lb://RECORDS-SERVICE
         predicates:
-          - Path=/api/v1/asistencias/**, /api/v1/anotaciones/**
+          - Path=/api/v1/asistencias/**,/api/v1/anotaciones/**
         filters:
           - name: CircuitBreaker
             args:
