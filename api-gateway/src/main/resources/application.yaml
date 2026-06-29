@@ -123,5 +123,8 @@ resilience4j:
 
 logging:
   level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.cloud.loadbalancer: DEBUG
+    reactor.netty: DEBUG
     resilience4j: DEBUG
     io.github.resilience4j: DEBUG
